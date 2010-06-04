@@ -9,9 +9,11 @@ dojo.require('dijit._Widget');
 dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     // size of the game
     size: 3,
+    // mark symbols
+    marks : ['X', 'O'],
     postMixInProperties: function() {
         // who's turn
-        this._knownTurn = 'X';
+        this._turn = 0;
         // number of slots
         this._slots = [];
         // init the array to the proper size
@@ -19,6 +21,14 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     },
     
     fill: function(slot) {
-        this._slots[slot]
+        var mark = this.marks[this._turn];
+        this._slots[slot] = mark;
+        this.onFill(slot, mark);
+        this._turn = (this._turn + 1) % this.marks.length;
+    },
+    
+    onFill: function(slot, mark) {
+        // extension point
+        console.debug(slot, mark);
     }
 });
