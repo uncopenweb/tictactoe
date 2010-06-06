@@ -5,6 +5,7 @@
  */
 dojo.provide('ttt.GameBoardModel');
 dojo.require('dijit._Widget');
+dojo.require('ttt.GameTopics');
 
 dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     // number of players
@@ -62,35 +63,29 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     },
 
     fillCell: function(cell) {
+        var curr = this._cells[cell];
+        if(curr !== undefined) {
+            // cell already taken
+            dojo.publish(ttt.MODEL_CELL_TAKEN, [cell, curr]);
+            return;
+        }
         var player = this._turn;
         this._cells[cell] = player;
         // next turn
         this._turn = (this._turn + 1) % this.players;
         // notify of cell taken
-        this.onFillCell(cell, player);
+        dojo.publish(ttt.MODEL_FILL_CELL, [cell, player]);
         // check for win
         if(this._checkWin(cell, player)) {
-            this.onGameEnd(player);
+            dojo.publish(ttt.MODEL_GAME_END, [player]);
             return;
         }
         // tie if no cells left
         var blank = dojo.filter(this._cells, 'return item === undefined;');
         if(blank.length) {
-            this.onNextTurn(this._turn);
+            dojo.publish(ttt.MODEL_NEXT_TURN, [this._turn]);
         } else {
-            this.onGameEnd();
+            dojo.publish(ttt.MODEL_GAME_END, null);
         }
-    },
-    
-    onFillCell: function(cell, player) {
-        // extension point
-    },
-    
-    onNextTurn: function(player) {
-        // extension point
-    },
-    
-    onGameEnd: function(win) {
-        // extension point
     }
 });

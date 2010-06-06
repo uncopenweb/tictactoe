@@ -8,6 +8,7 @@ dojo.require('dojo.i18n');
 dojo.require('dijit._Widget');
 dojo.require('dijit._Templated');
 dojo.require('dijit._Contained');
+dojo.require('ttt.GameTopics');
 dojo.requireLocalization('ttt', 'GameBoardView');
 
 dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Contained], {
@@ -21,7 +22,9 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
     postMixInProperties: function() {
         this.model = dijit.byId(this.model);
         // listen to model events
-        this.connect(this.model, 'onFillCell', '_onFillCell');
+        dojo.subscribe(ttt.MODEL_FILL_CELL, this, '_onFillCell');
+        // listen to controller events
+        dojo.subscribe(ttt.CTRL_REGARDL_CELL, this, '_onRegardCell');
         // blank cell char
         this._blank = '&nbsp;';
         // board labels
@@ -43,10 +46,6 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
                     innerHTML : this._blank,
                     className: 'tttBlank'
                 }, tr);
-                td.setAttribute('data-cell', (row * size) + col);
-                this.connect(td, 'onclick', '_onClickCell');
-                this.connect(td, 'onmouseover', '_onHoverCell');
-                this.connect(td, 'onmouseout', '_onUnhoverCell');
                 if(col) {
                     dojo.addClass(td, 'tttLeftBorder');
                 }
@@ -93,41 +92,34 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         };
         dojo.style(this.tableNode, box);
     },
-
-    /** 
-     * Called when the user clicks a cell (td) in the table game board.
-     * Connected with code in postCreate().
+    
+    /**
+     * Gets the DOM nodes representing cells in this view.
      */
-    _onClickCell: function(event) {
-        var cell = event.target.getAttribute('data-cell');
-        if(!cell) {return;}
-        event.target.removeAttribute('data-cell');
-        this.model.fillCell(cell);
+    getCellNodes: function() {
+        return dojo.query('td', this.containerNode);
     },
     
+    /**
+     * Called when a cell is filled in the model.
+     */
     _onFillCell: function(cell, player) {
-        var td = dojo.query('td', this.containerNode)[cell];
+        var td = this.getCellNodes()[cell];
         td.innerHTML = this.labels.player_marks[player];
         dojo.addClass(td, 'tttFilled');
         dojo.removeClass(td, 'tttBlank');
     },
     
-    _onHoverCell: function(event) {
-        var cell = event.target.getAttribute('data-cell');
-        if(cell === null) {
-            return;
-        }
-        var td = event.target;
-        var player = this.model.getPlayerTurn();
-        td.innerHTML = this.labels.player_marks[player];
-    },
-    
-    _onUnhoverCell: function(event) {
-        var cell = event.target.getAttribute('data-cell');
-        if(cell === null) {
-            return;
-        }
-        var td = event.target;
-        td.innerHTML = this._blank;
+    /**
+     * Called when the player regards / focuses / activates a cell.
+     */
+    _onRegardCell: function(newCell, oldCell) {
+        var cells = this.getCellNodes();
+        var node = cells[newCell];
+        node.innerHTML = this.labels.player_marks[player];
+        dojo.toggleClass(node, 'tttRegarded');
+        node = cells[oldCell];
+        node.innerHTML = this._blank;
+        dojo.toggleClass(node, 'tttRegarded');
     }
 });

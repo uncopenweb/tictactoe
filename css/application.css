@@ -51,7 +51,7 @@ h1 {
     border-left-width: 3px;
 }
 
-.tttGameBoardView .tttTopBorder {
+.tttGameBoardView .tttTopBorder {c
     border-top-width: 3px;
 }
 
@@ -63,10 +63,16 @@ h1 {
     cursor: pointer;
 }
 
-.tttGameBoardView .tttBlank:hover {
+.tttGameBoardView .tttBlank {
     color: #999;
+}
+
+.tttGameBoardView .tttBlank.tttRegarded {
 }
 
 .tttGameBoardView .tttFilled {
     cursor: not-allowed;
+}
+
+.tttGameBoardView .tttFilled.tttRegarded {
 }
