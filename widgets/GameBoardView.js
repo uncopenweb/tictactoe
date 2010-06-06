@@ -4,22 +4,28 @@
  * Copyright UNC Open Web Team 2010. All Rights Reserved.
  */
 dojo.provide('ttt.GameBoardView');
+dojo.require('dojo.i18n');
 dojo.require('dijit._Widget');
 dojo.require('dijit._Templated');
 dojo.require('dijit._Contained');
+dojo.requireLocalization('ttt', 'GameBoardView');
 
 dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Contained], {
     // reference to the model driving this view
-    model: null,
+    model: '',
     // template markup for the widget
     templatePath: dojo.moduleUrl('ttt', 'templates/GameBoardView.html'),
     /**
      * Called after the attributes passed to the constructor are available.
      */
     postMixInProperties: function() {
-        this.model = dijit.byNode(this.model);
-        // list to model events
-        this.connect(this.model, 'onFill', '_onFillSlot');
+        this.model = dijit.byId(this.model);
+        // listen to model events
+        this.connect(this.model, 'onFillCell', '_onFillCell');
+        // blank cell char
+        this._blank = '&nbsp;';
+        // board labels
+        this.labels = dojo.i18n.getLocalization('ttt', 'GameBoardView');
     },
     
     /**
@@ -31,14 +37,19 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         for(var row=0; row < size; row++) {
             var tr = dojo.create('tr', null, this.containerNode);
             for(var col=0; col < size; col++) {
-                var td = dojo.create('td', {innerHTML : '&nbsp;'}, tr);
+                var td = dojo.create('td', {
+                    innerHTML : this._blank,
+                    className: 'tttBlank'
+                }, tr);
                 td.setAttribute('data-cell', (row * size) + col);
                 this.connect(td, 'onclick', '_onClickCell');
+                this.connect(td, 'onmouseover', '_onHoverCell');
+                this.connect(td, 'onmouseout', '_onUnhoverCell');
                 if(col) {
-                    dojo.style(td, {borderLeftWidth : '1px'});
+                    dojo.addClass(td, 'tttLeftBorder');
                 }
                 if(row) {
-                    dojo.style(td, {borderTopWidth : '1px'});
+                    dojo.addClass(td, 'tttTopBorder');
                 }
             }
         }
@@ -46,7 +57,8 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
     
     /**
      * Called when the container resizes. Recomputes the size of the game grid
-     * and all tile cells.
+     * and all tile cells. Imperfect because it doesn't account for borders,
+     * margins, padding of the table, but good enough.
      *
      * @param size Box object
      */
@@ -64,7 +76,7 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         var box = {w: cs, h: cs};
         dojo.query('td', this.containerNode).forEach(function(td) {
             dojo.marginBox(td, box);
-            dojo.style(td, 'font-size', box.w + 'px');
+            dojo.style(td, 'fontSize', box.w + 'px');
         });
 
         // center the table
@@ -84,12 +96,32 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         var cell = event.target.getAttribute('data-cell');
         if(!cell) {return;}
         event.target.removeAttribute('data-cell');
-        this.model.fill(cell);
+        this.model.fillCell(cell);
     },
     
-    _onFillSlot: function(slot, mark) {
-        console.debug(slot, mark);
-        var td = dojo.query('td', this.containerNode)[slot];
-        td.innerHTML = mark;
+    _onFillCell: function(cell, player) {
+        var td = dojo.query('td', this.containerNode)[cell];
+        td.innerHTML = this.labels.player_marks[player];
+        dojo.addClass(td, 'tttFilled');
+        dojo.removeClass(td, 'tttBlank');
+    },
+    
+    _onHoverCell: function(event) {
+        var cell = event.target.getAttribute('data-cell');
+        if(cell === null) {
+            return;
+        }
+        var td = event.target;
+        var player = this.model.getPlayerTurn();
+        td.innerHTML = this.labels.player_marks[player];
+    },
+    
+    _onUnhoverCell: function(event) {
+        var cell = event.target.getAttribute('data-cell');
+        if(cell === null) {
+            return;
+        }
+        var td = event.target;
+        td.innerHTML = this._blank;
     }
 });

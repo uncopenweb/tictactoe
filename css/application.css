@@ -18,22 +18,55 @@ html, body {
     height: 100%;
 }
 
-h1 {
-    text-align: center;
-    margin-top: 0em;
-}
-
-.dijitBorderContainerNoGutterPane {
+#layout .dijitBorderContainerNoGutterPane {
     overflow: hidden;
     margin: 10px;
 }
 
+#footer {
+    height: 90px;
+    margin: 0px !important;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0em;
+    font-size: 1.25em;
+    color: #333;
+}
+
+.tttGameBoardView {
+    -webkit-transform: rotate(-3deg); 
+    -moz-transform: rotate(-3deg);
+    -o-transform:rotate(-3deg);
+}
+
 .tttGameBoardView table {
     border-collapse: collapse;
+    border-width: 0px;
+}
+
+.tttGameBoardView .tttLeftBorder {
+    border-left-width: 3px;
+}
+
+.tttGameBoardView .tttTopBorder {
+    border-top-width: 3px;
 }
 
 .tttGameBoardView td {
+    border-width: 0px;
     text-align: center;
     border-color: black;
     border-style: solid;
+    cursor: pointer;
+}
+
+.tttGameBoardView .tttBlank:hover {
+    color: #999;
+}
+
+.tttGameBoardView .tttFilled {
+    cursor: not-allowed;
 }
