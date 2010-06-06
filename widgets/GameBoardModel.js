@@ -10,7 +10,7 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     // number of players
     players: 2,
     // size of the game
-    size: 4,
+    size: 3,
     postMixInProperties: function() {
         // who's turn
         this._turn = 0;

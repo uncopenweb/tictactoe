@@ -26,6 +26,8 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         this._blank = '&nbsp;';
         // board labels
         this.labels = dojo.i18n.getLocalization('ttt', 'GameBoardView');
+        // border sizes between cells
+        this._offset = {w : 0, h : 0};
     },
     
     /**
@@ -53,12 +55,16 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
                 }
             }
         }
+        // save computed style border properties of bottom, right cell
+        var css = dojo.getComputedStyle(td);
+        this._offset.w = parseInt(css['border-left-width']);
+        this._offset.h = parseInt(css['border-top-width']);
     },
     
     /**
      * Called when the container resizes. Recomputes the size of the game grid
-     * and all tile cells. Imperfect because it doesn't account for borders,
-     * margins, padding of the table, but good enough.
+     * and all tile cells. Imperfect because it doesn't account for margins
+     * and padding of the table, but good enough.
      *
      * @param size Box object
      */
@@ -66,17 +72,17 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         var size = dojo.contentBox(this.domNode);
         var cols = this.model.attr('size');
         // bound cells by width
-        var cs = size.w / (cols);
-        if(cs * (cols+1) > size.h) {
+        var cs = (size.w - cols * this._offset.w) / cols;
+        if(cs * (cols+1) > (size.h - cols * this._offset.h)) {
             // bound by height
-            cs = size.h / (cols);
+            cs = (size.h - cols * this._offset.h) / cols;
         }
         
         // resize all the cells
         var box = {w: cs, h: cs};
         dojo.query('td', this.containerNode).forEach(function(td) {
-            dojo.marginBox(td, box);
-            dojo.style(td, 'fontSize', box.w + 'px');
+            dojo.contentBox(td, box);
+            dojo.style(td, 'fontSize', (box.w-10) + 'px');
         });
 
         // center the table
