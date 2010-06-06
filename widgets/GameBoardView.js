@@ -23,8 +23,9 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         this.model = dijit.byId(this.model);
         // listen to model events
         dojo.subscribe(ttt.MODEL_FILL_CELL, this, '_onFillCell');
+        dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
         // listen to controller events
-        dojo.subscribe(ttt.CTRL_REGARDL_CELL, this, '_onRegardCell');
+        dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
         // blank cell char
         this._blank = '&nbsp;';
         // board labels
@@ -114,12 +115,29 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
      * Called when the player regards / focuses / activates a cell.
      */
     _onRegardCell: function(newCell, oldCell) {
+        console.debug('_onRegardCell', newCell, oldCell);
         var cells = this.getCellNodes();
-        var node = cells[newCell];
-        node.innerHTML = this.labels.player_marks[player];
-        dojo.toggleClass(node, 'tttRegarded');
-        node = cells[oldCell];
-        node.innerHTML = this._blank;
-        dojo.toggleClass(node, 'tttRegarded');
+        var node, mark;
+        if(newCell !== null) {
+            mark = this.model.getCell(newCell);
+            node = cells[newCell];
+            if(mark === undefined) {
+                var player = this.model.getPlayerTurn();
+                node.innerHTML = this.labels.player_marks[player];
+            }
+            dojo.toggleClass(node, 'tttRegarded');
+        }
+        if(oldCell !== null) {
+            mark = this.model.getCell(oldCell);
+            node = cells[oldCell];
+            if(mark === undefined) {
+                node.innerHTML = this._blank;
+            }
+            dojo.toggleClass(node, 'tttRegarded');
+        }
+    },
+    
+    _onEndGame: function() {
+        this.getCellNodes().addClass('tttFilled');
     }
 });

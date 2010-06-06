@@ -10,6 +10,8 @@ dojo.require('dojo.parser');
 dojo.require('ttt.GameBoardView');
 dojo.require('ttt.GameTurnView');
 dojo.require('ttt.GameBoardModel');
+dojo.require('ttt.GameBoardMouse');
+dojo.require('ttt.GameBoardKeys');
 
 dojo.ready(function() {
     // force a layout after page load, but outside the load event handler

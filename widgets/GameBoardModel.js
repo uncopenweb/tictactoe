@@ -77,7 +77,7 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
         dojo.publish(ttt.MODEL_FILL_CELL, [cell, player]);
         // check for win
         if(this._checkWin(cell, player)) {
-            dojo.publish(ttt.MODEL_GAME_END, [player]);
+            dojo.publish(ttt.MODEL_END_GAME, [player]);
             return;
         }
         // tie if no cells left
@@ -85,7 +85,11 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
         if(blank.length) {
             dojo.publish(ttt.MODEL_NEXT_TURN, [this._turn]);
         } else {
-            dojo.publish(ttt.MODEL_GAME_END, null);
+            dojo.publish(ttt.MODEL_END_GAME, [null]);
         }
+    },
+    
+    getCell: function(cell) {
+        return this._cells[cell];
     }
 });

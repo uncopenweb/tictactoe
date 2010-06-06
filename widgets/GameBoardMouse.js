@@ -3,7 +3,7 @@
  *
  * Copyright UNC Open Web Team 2010. All Rights Reserved.
  */
-dojo.provide('ttt.GameBoardView');
+dojo.provide('ttt.GameBoardMouse');
 dojo.require('dijit._Widget');
 
 dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
@@ -19,6 +19,8 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
         this.view = dijit.byId(this.view);
         // track last regarded cell
         this._lastRegard = null;
+        // DOM connection tokens
+        this._tokens = [];
     },
     
     postCreate: function() {
@@ -28,6 +30,10 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
             this.connect(node, 'onclick', '_onClickCell');
             this.connect(node, 'onmouseover', '_onHoverCell');
         }, this);
+        // connect to model events
+        dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        // connect to other controller events
+        dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
     },
     
     /** 
@@ -35,7 +41,7 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
      */
     _onClickCell: function(event) {
         var cell = event.target.getAttribute('data-cell');
-        this.model.fillCell(cell);
+        this.model.fillCell(Number(cell));
     },
 
     /** 
@@ -44,7 +50,20 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
     _onHoverCell: function(event) {
         var node = event.target;
         var cell = node.getAttribute('data-cell');
-        dojo.publish(ttt.CTRL_REGARD_CELL, [cell, this._lastRegard]);
-        this._lastRegard = cell;
+        dojo.publish(ttt.CTRL_REGARD_CELL, [Number(cell), this._lastRegard]);
+    },
+    
+    /**
+     * Called when some controller regards a new cell.
+     */
+    _onRegardCell: function(newCell) {
+        this._lastRegard = Number(newCell);
+    },
+    
+    /**
+     * Called when the game ends.
+     */
+    _onEndGame: function() {
+        this.destroy();
     }
 });
