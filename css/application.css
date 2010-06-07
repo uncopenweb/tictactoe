@@ -76,3 +76,7 @@ h1 {
 
 .tttGameBoardView .tttFilled.tttRegarded {
 }
+
+.tttGameBoardView .tttWin {
+    color: red;
+}

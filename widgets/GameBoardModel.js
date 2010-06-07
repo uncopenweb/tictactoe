@@ -26,36 +26,44 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
         var col = cell % this.size;
         var i, c;
         // check row
+        var win = [];
         for(i=0; i < this.size; i++) {
             c = i + (row*this.size);
             if(this._cells[c] != player) {break;}
-            if(i == this.size-1) {return true;}
+            win.push(c);
+            if(i == this.size-1) {return win;}
         }
         
         // check col
+        win = [];
         for(i=0; i < this.size; i++) {
             c = col + i*this.size;
             if(this._cells[c] != player) {break;}
-            if(i == this.size-1) {return true;}
+            win.push(c);
+            if(i == this.size-1) {return win;}
         }
 
         // check diag
         if(row == col) {
+            win = [];
             for(i=0; i < this.size; i++) {
                 c = i + i*this.size;
                 if(this._cells[c] != player) {break;}
-                if(i == this.size-1) {return true;}                
+                win.push(c);
+                if(i == this.size-1) {return win;}                
             }
         }
         
         if(col == this.size - row - 1) {
+            win = [];
             for(i=0; i < this.size; i++) {
                 c = (this.size - i - 1) + i*this.size;
                 if(this._cells[c] != player) {break;}
-                if(i == this.size-1) {return true;}                
+                win.push(c);
+                if(i == this.size-1) {return win;}
             }
         }
-        return false;
+        return null;
     },
     
     getPlayerTurn: function() {
@@ -76,8 +84,10 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
         // notify of cell taken
         dojo.publish(ttt.MODEL_FILL_CELL, [cell, player]);
         // check for win
-        if(this._checkWin(cell, player)) {
-            dojo.publish(ttt.MODEL_END_GAME, [player]);
+        var win = this._checkWin(cell, player);
+        if(win !== null) {
+            console.log('ending game');
+            dojo.publish(ttt.MODEL_END_GAME, [player, win]);
             return;
         }
         // tie if no cells left
@@ -85,7 +95,7 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
         if(blank.length) {
             dojo.publish(ttt.MODEL_NEXT_TURN, [this._turn]);
         } else {
-            dojo.publish(ttt.MODEL_END_GAME, [null]);
+            dojo.publish(ttt.MODEL_END_GAME, [null, null]);
         }
     },
     

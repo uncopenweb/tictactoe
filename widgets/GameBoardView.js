@@ -21,11 +21,6 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
      */
     postMixInProperties: function() {
         this.model = dijit.byId(this.model);
-        // listen to model events
-        dojo.subscribe(ttt.MODEL_FILL_CELL, this, '_onFillCell');
-        dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
-        // listen to controller events
-        dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
         // blank cell char
         this._blank = '&nbsp;';
         // board labels
@@ -55,10 +50,26 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
                 }
             }
         }
+        this._offset = {td : td};
+
+        // listen to model events
+        var a = dojo.subscribe(ttt.MODEL_FILL_CELL, this, '_onFillCell');
+        var b = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        // listen to controller events
+        var c = dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
+        // store tokens for later unsubscribe
+        this._stoks = [a,b,c];
+    },
+    
+    startup: function() {
         // save computed style border properties of bottom, right cell
-        var css = dojo.getComputedStyle(td);
+        var css = dojo.getComputedStyle(this._offset.td);
         this._offset.w = parseInt(css['border-left-width']);
-        this._offset.h = parseInt(css['border-top-width']);
+        this._offset.h = parseInt(css['border-top-width']);        
+    },
+    
+    uninitialize: function() {
+        dojo.forEach(this._stoks, dojo.unsubscribe);
     },
     
     /**
@@ -115,7 +126,6 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
      * Called when the player regards / focuses / activates a cell.
      */
     _onRegardCell: function(newCell, oldCell) {
-        console.debug('_onRegardCell', newCell, oldCell);
         var cells = this.getCellNodes();
         var node, mark;
         if(newCell !== null) {
@@ -137,7 +147,14 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
         }
     },
     
-    _onEndGame: function() {
+    _onEndGame: function(player, win) {
         this.getCellNodes().addClass('tttFilled');
+        if(win !== null) {
+            // show the winning cells
+            var cells = this.getCellNodes();
+            dojo.forEach(win, function(item) {
+                dojo.addClass(cells[item], 'tttWin');
+            });
+        }
     }
 });

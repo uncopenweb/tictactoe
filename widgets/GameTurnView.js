@@ -19,11 +19,6 @@ dojo.declare('ttt.GameTurnView', [dijit._Widget, dijit._Contained], {
      */
     postMixInProperties: function() {
         this.model = dijit.byId(this.model);
-        // listen to model events 
-        var a, b;
-        a = dojo.subscribe(ttt.MODEL_NEXT_TURN, this, '_onNextTurn');
-        b = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onGameEnd');
-        this._tokens = [a, b];
         // board and turn labels
         this.labels = dojo.i18n.getLocalization('ttt', 'GameTurnView');
         var lbls = dojo.i18n.getLocalization('ttt', 'GameBoardView');
@@ -32,10 +27,14 @@ dojo.declare('ttt.GameTurnView', [dijit._Widget, dijit._Contained], {
     
     postCreate: function() {
         this._onNextTurn();
+        // listen to model events 
+        var a = dojo.subscribe(ttt.MODEL_NEXT_TURN, this, '_onNextTurn');
+        var b = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        this._stoks = [a, b];        
     },
     
     uninitialize: function() {
-        dojo.map(this._tokens, dojo, 'unsubscribe');
+        dojo.forEach(this._stoks, dojo.unsubscribe);
     },
     
     _onNextTurn: function(player) {
@@ -45,7 +44,7 @@ dojo.declare('ttt.GameTurnView', [dijit._Widget, dijit._Contained], {
         this.domNode.innerHTML = txt;
     },
     
-    _onGameEnd: function(player) {
+    _onEndGame: function(player) {
         if(player !== null) {
             var mark = this.labels.player_marks[player];
             var txt = dojo.replace(this.labels.win_label, {player : mark});

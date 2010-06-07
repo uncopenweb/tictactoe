@@ -19,8 +19,6 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
         this.view = dijit.byId(this.view);
         // track last regarded cell
         this._lastRegard = null;
-        // DOM connection tokens
-        this._tokens = [];
     },
     
     postCreate: function() {
@@ -31,9 +29,15 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
             this.connect(node, 'onmouseover', '_onHoverCell');
         }, this);
         // connect to model events
-        dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        var a = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
         // connect to other controller events
-        dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
+        var b = dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
+        // store tokens for later unsubscribe
+        this._stoks = [a,b];
+    },
+    
+    uninitialize: function() {
+        dojo.forEach(this._stoks, dojo.unsubscribe);
     },
     
     /** 
