@@ -24,19 +24,12 @@
     <script type="text/javascript" src="application.js"></script>
   </head>
   <body class="tundra">
-  <body class="tundra" tabindex="0">
-    <div dojoType="ttt.GameBoardModel" id="game"></div>
-    <!--<div dojoType="ttt.GameBoardAudio" model="game"></div>-->
     <div dojoType="dijit.layout.BorderContainer" id="layout" gutters="false" liveSplitters="true">
       <div dojoType="dijit.layout.ContentPane" region="top" splitter="false">
         <h1>Tic-Tac-Toe</h1>
       </div>
-      <div dojoType="ttt.GameBoardView" model="game" id="board" region="center"></div>
-      <div dojoType="dijit.layout.BorderContainer" id="footer" gutters="false" liveSplitters="true" region="bottom">
-        <div dojoType="ttt.GameTurnView" model="game" region="left" splitter="false"></div>
+      <div dojoType="dijit.layout.BorderContainer" id="footer" gutters="false" region="bottom">
       </div>
     </div>
-    <div dojoType="ttt.GameBoardMouse" model="game" view="board"></div>
-    <div dojoType="ttt.GameBoardKeys" model="game" view="board"></div>
   </body>
 </html>

@@ -14,7 +14,7 @@ dojo.require('ttt.GameBoardMouse');
 dojo.require('ttt.GameBoardKeys');
 dojo.require('ttt.GameTopics');
 
-dojo.declare('ttt.Main', dijit._Widget, {
+dojo.declare('ttt.Main', null, {
     constructor: function() {
         // force a layout after page load, but outside the load event handler
         // Firefox doesn't layout properly if we do it right away
@@ -35,7 +35,7 @@ dojo.declare('ttt.Main', dijit._Widget, {
         // fetch layout widgets in markup
         var layout = dijit.byId('layout');
         var footer = dijit.byId('footer');
-        
+
         // build all new game components
         var model = new ttt.GameBoardModel({id : 'game'});
         model.placeAt(dojo.body(), 'first');
