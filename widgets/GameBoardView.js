@@ -64,8 +64,8 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
     startup: function() {
         // save computed style border properties of bottom, right cell
         var css = dojo.getComputedStyle(this._offset.td);
-        this._offset.w = parseInt(css['border-left-width']);
-        this._offset.h = parseInt(css['border-top-width']);        
+        this._offset.w = parseInt(css['border-left-width'] || css['borderLeftWidth']);
+        this._offset.h = parseInt(css['border-top-width'] || css['borderTopWidth']);
     },
     
     uninitialize: function() {

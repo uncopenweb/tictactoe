@@ -71,10 +71,6 @@ dojo.declare('ttt.Main', null, {
         var kctrl = new ttt.GameBoardKeys({model : 'game', view : 'board'});
         kctrl.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(kctrl);
-        
-        // force a layout after page load, but outside the load event handler
-        // Firefox doesn't layout properly if we do it right away
-        //setTimeout(function() {dijit.byId('layout').resize();}, 0);
     }
 });
 
