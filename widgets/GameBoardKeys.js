@@ -19,6 +19,8 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
         this.view = dijit.byId(this.view);
         // track last regarded cell
         this._lastRegard = null;
+        // track if game ended
+        this._ended = false;
     },
     
     postCreate: function() {
@@ -45,9 +47,15 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     },
     
     _onKeyUp: function(event) {
+        if(this._ended) {
+            // reset the game if ended 
+            this.destroy();
+            dojo.publish(ttt.CTRL_RESET_GAME);
+            return;
+        }
         if(this._lastRegard === null) {
             // jump into the grid top-left on any key to start
-            dojo.publish(ttt.REGARD_CELL, [0, null]);
+            dojo.publish(ttt.CTRL_REGARD_CELL, [0, null]);
             return;
         }
         var size = this.model.attr('size');
@@ -103,6 +111,6 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
      * Called when the game ends.
      */
     _onEndGame: function() {
-        this.destroy();
+        this._ended = true;
     }
 });

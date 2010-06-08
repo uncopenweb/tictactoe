@@ -54,7 +54,9 @@ dojo.declare('ttt.GameBoardMouse', [dijit._Widget], {
     _onHoverCell: function(event) {
         var node = event.target;
         var cell = node.getAttribute('data-cell');
-        dojo.publish(ttt.CTRL_REGARD_CELL, [Number(cell), this._lastRegard]);
+        if(Number(cell) != this._lastRegard) {
+            dojo.publish(ttt.CTRL_REGARD_CELL, [Number(cell), this._lastRegard]);
+        }
     },
     
     /**

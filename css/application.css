@@ -68,6 +68,7 @@ h1 {
 }
 
 .tttGameBoardView .tttBlank.tttRegarded {
+    background-color: #cce4fa;
 }
 
 .tttGameBoardView .tttFilled {
@@ -75,6 +76,7 @@ h1 {
 }
 
 .tttGameBoardView .tttFilled.tttRegarded {
+    background-color: #ffb4b4;
 }
 
 .tttGameBoardView .tttWin {

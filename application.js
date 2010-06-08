@@ -7,6 +7,7 @@ dojo.provide('ttt.Main');
 dojo.require('dijit.layout.BorderContainer');
 dojo.require('dijit.layout.ContentPane');
 dojo.require('dojo.parser');
+dojo.require('ttt.GameBoardAudio');
 dojo.require('ttt.GameBoardView');
 dojo.require('ttt.GameTurnView');
 dojo.require('ttt.GameBoardModel');
@@ -16,20 +17,31 @@ dojo.require('ttt.GameTopics');
 
 dojo.declare('ttt.Main', null, {
     constructor: function() {
-        // force a layout after page load, but outside the load event handler
-        // Firefox doesn't layout properly if we do it right away
-        //setTimeout(function() {dijit.byId('layout').resize();}, 0);
+        // audio api
+        this._audio = null;
         // game widgets
         this._gameWidgets = [];
-        // reset the game components to start
+        // @todo: first player, alternates between games
+        this._player = 0;
+        // listen for game reset
+        dojo.subscribe(ttt.CTRL_RESET_GAME, this, 'resetGame');
+        // build an audio instance with caching enabled
+        var def = uow.getAudio({defaultCaching: true});
+        // when audio is ready, kick off a game reset
+        def.addCallback(dojo.hitch(this, '_onAudioReady'));
+    },
+    
+    _onAudioReady: function(audio) {
+        this._audio = audio;
+        // kick off the game
         this.resetGame();
-        // listen for game end to show reset message
-        dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
     },
     
     resetGame: function() {
         // destroy existing game widgets
-        dojo.forEach(this._gameWidgets, dojo, 'destroy');
+        dojo.forEach(this._gameWidgets, function(widget) {
+            widget.destroyRecursive();
+        });
         this._gameWidgets = [];
         
         // fetch layout widgets in markup
@@ -50,16 +62,19 @@ dojo.declare('ttt.Main', null, {
         var tview = new ttt.GameTurnView({model : 'game', region: 'left'});
         tview.placeAt(footer, 'first');
         this._gameWidgets.push(tview);
+        var aview = new ttt.GameBoardAudio({model : 'game', audio: this._audio});
+        aview.placeAt(dojo.body(), 'last');
+        this._gameWidgets.push(aview);
         var mctrl = new ttt.GameBoardMouse({model : 'game', view : 'board'});
         mctrl.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(mctrl);
         var kctrl = new ttt.GameBoardKeys({model : 'game', view : 'board'});
         kctrl.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(kctrl);
-    },
-
-    _onEndGame: function(player, win) {
-        // rebuild game components
+        
+        // force a layout after page load, but outside the load event handler
+        // Firefox doesn't layout properly if we do it right away
+        //setTimeout(function() {dijit.byId('layout').resize();}, 0);
     }
 });
 

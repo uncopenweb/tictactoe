@@ -8,13 +8,13 @@ dojo.require('dijit._Widget');
 dojo.require('ttt.GameTopics');
 
 dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
+    // which player's turn to start
+    turn: 0,
     // number of players
     players: 2,
     // size of the game
     size: 3,
     postMixInProperties: function() {
-        // who's turn
-        this._turn = 0;
         // number of slots
         this._cells = [];
         // init the array to the proper size
@@ -67,33 +67,33 @@ dojo.declare('ttt.GameBoardModel', [dijit._Widget], {
     },
     
     getPlayerTurn: function() {
-        return this._turn;
+        return this.turn;
     },
 
     fillCell: function(cell) {
+        cell = Number(cell);
         var curr = this._cells[cell];
         if(curr !== undefined) {
             // cell already taken
             dojo.publish(ttt.MODEL_CELL_TAKEN, [cell, curr]);
             return;
         }
-        var player = this._turn;
+        var player = this.turn;
         this._cells[cell] = player;
         // next turn
-        this._turn = (this._turn + 1) % this.players;
+        this.turn = (this.turn + 1) % this.players;
         // notify of cell taken
         dojo.publish(ttt.MODEL_FILL_CELL, [cell, player]);
         // check for win
         var win = this._checkWin(cell, player);
         if(win !== null) {
-            console.log('ending game');
             dojo.publish(ttt.MODEL_END_GAME, [player, win]);
             return;
         }
         // tie if no cells left
         var blank = dojo.filter(this._cells, 'return item === undefined;');
         if(blank.length) {
-            dojo.publish(ttt.MODEL_NEXT_TURN, [this._turn]);
+            dojo.publish(ttt.MODEL_NEXT_TURN, [this.turn]);
         } else {
             dojo.publish(ttt.MODEL_END_GAME, [null, null]);
         }

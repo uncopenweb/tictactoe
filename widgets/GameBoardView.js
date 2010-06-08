@@ -148,7 +148,9 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
     },
     
     _onEndGame: function(player, win) {
-        this.getCellNodes().addClass('tttFilled');
+        var nodes = this.getCellNodes();
+        nodes.addClass('tttFilled');
+        nodes.removeClass('tttRegarded');
         if(win !== null) {
             // show the winning cells
             var cells = this.getCellNodes();

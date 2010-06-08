@@ -6,9 +6,100 @@
 dojo.provide('ttt.GameBoardAudio');
 dojo.require('dojo.i18n');
 dojo.require('dijit._Widget');
+dojo.requireLocalization('ttt', 'GameBoardView');
 dojo.requireLocalization('ttt', 'GameBoardAudio');
 
-dojo.declare('ttt.GameBoardView', [dijit._Widget], {
+dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
     // reference to the model driving this view
-    model: ''
+    model: '',
+    // reference to audio interface
+    audio: null,
+    postMixInProperties: function() {
+        this.model = dijit.byId(this.model);
+        // load labels
+        this.labels = dojo.i18n.getLocalization('ttt', 'GameBoardAudio');
+        var lbls = dojo.i18n.getLocalization('ttt', 'GameBoardView');
+        dojo.mixin(this.labels, lbls);
+        // deferred from last fill action
+        this._fillSay = null;
+    },
+    
+    postCreate: function() {
+        // listen to model events
+        var a = dojo.subscribe(ttt.MODEL_FILL_CELL, this, '_onFillCell');
+        var b = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        // listen to controller events
+        var c = dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
+        // store tokens for later unsubscribe
+        this._stoks = [a,b,c];
+        // announce first turn
+        var player = this.model.getPlayerTurn();
+        var mark = this.labels.player_marks[player];
+        var text = dojo.replace(this.labels.start_game_speech, {mark: mark});
+        this.audio.say({text: text, channel : 'tttSpeech'});
+    },
+    
+    uninitialize: function() {
+        this._destroyed = true;
+        this.audio.stop({channel : 'tttSpeech'});
+        this.audio.stop({channel : 'tttSound'});
+        dojo.forEach(this._stoks, dojo.unsubscribe);
+    },
+    
+    _onFillCell: function(cell, player) {
+        // stop previous output
+        this.audio.stop({channel : 'tttSpeech'});
+        this.audio.stop({channel : 'tttSound'});
+        // play scribble sound
+        this.audio.play({url : this.labels.fill_cell_sound, channel: 'tttSound'});
+        // say player / cell
+        var mark = this.labels.player_marks[player];
+        var size = this.model.attr('size');
+        var row = Math.floor(cell / size);
+        var col = cell % size;
+        var text = dojo.replace(this.labels.fill_cell_speech, {
+            mark: mark, row: row, col: col});
+        this._fillSay = this.audio.say({text: text, channel : 'tttSpeech'});
+    },
+    
+    _onEndGame: function(player, win) {
+        // wait for fill cell sound + speech to finish
+        this._fillSay.callAfter(dojo.hitch(this, function() {
+            if(!this.domNode.parentNode) {return;}
+            // play win / tie sound
+            var url = (player !== null) ? this.labels.win_game_sound : this.labels.tie_game_sound;
+            this.audio.play({url : url, channel : 'tttSound'});
+            // say winner / tie
+            var text = (player !== null) ? this.labels.win_game_speech : this.labels.tie_game_speech;
+            var mark = this.labels.player_marks[player];
+            text = dojo.replace(text, {mark : mark});
+            this.audio.say({text : text, channel : 'tttSpeech'});
+            // announce how to restart
+            text = this.labels.reset_game_speech;
+            this.audio.say({text : text, channel : 'tttSpeech'})
+        }));
+    },
+    
+    _onRegardCell: function(newCell, oldCell) {
+        // stop previous output
+        this.audio.stop({channel : 'tttSpeech'});
+        this.audio.stop({channel : 'tttSound'});
+        // @todo: play blank / filled sound
+        // @todo: do this after an idle on the cell after sound is impl
+        //   too annoying if immediate
+        var player = this.model.getCell(newCell);
+        var text;
+        var size = this.model.attr('size');
+        var row = Math.floor(newCell / size);
+        var col = newCell % size;
+        if(player !== undefined) {
+            var mark = this.labels.player_marks[player];
+            text = dojo.replace(this.labels.filled_cell_speech, {
+                mark: mark, row: row, col: col});
+        } else {
+            text = dojo.replace(this.labels.blank_cell_speech, {
+                row: row, col: col});
+        }
+        this.audio.say({text : text, channel : 'tttSpeech'})
+    }
 });

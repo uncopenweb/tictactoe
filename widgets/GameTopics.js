@@ -17,3 +17,5 @@ ttt.MODEL_END_GAME = '/ttt/model/end_game';
 ttt.CTRL_REGARD_CELL = '/ttt/ctrl/regard_cell';
 // no value
 ttt.CTRL_CANT_REGARD_CELL = '/ttt/ctrl/cant_regard_cell';
+// no value
+ttt.CTRL_RESET_GAME = '/ttt/ctrl/reset_game';
