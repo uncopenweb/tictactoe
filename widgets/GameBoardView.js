@@ -81,12 +81,13 @@ dojo.declare('ttt.GameBoardView', [dijit._Widget, dijit._Templated, dijit._Conta
      */
     resize: function() {
         var size = dojo.contentBox(this.domNode);
+        var offset = 20;
         var cols = this.model.attr('size');
         // bound cells by width
-        var cs = (size.w - cols * this._offset.w) / cols;
-        if(cs * (cols+1) > (size.h - cols * this._offset.h)) {
+        var cs = (size.w - offset - cols * this._offset.w) / cols;
+        if(cs * (cols+1) > (size.h- offset - cols * this._offset.h)) {
             // bound by height
-            cs = (size.h - cols * this._offset.h) / cols;
+            cs = (size.h  - offset - cols * this._offset.h) / cols;
         }
         
         // resize all the cells
