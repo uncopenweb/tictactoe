@@ -73,6 +73,13 @@ h1 {
 
 .tttGameBoardView .tttFilled {
     cursor: not-allowed;
+    -webkit-transition-property: color, background-color;
+    -moz-transition-property: color, background-color;
+    -o-transition-property: color, background-color;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    -o-transition-duration: 0.25s;
+    color: #000;
 }
 
 .tttGameBoardView .tttFilled.tttRegarded {
@@ -80,5 +87,14 @@ h1 {
 }
 
 .tttGameBoardView .tttWin {
-    color: red;
+    -webkit-transition-property: -webkit-transform, background-color;
+    -webkit-transition-duration: 0.5s, 0.25s;
+    -moz-transition-property: -moz-transform, background-color;
+    -moz-transition-duration: 0.5s, 0.25s;
+    -o-transition-property: -o-transform, background-color;
+    -o-transition-duration: 0.5s;
+    background-color: #ccffcc;
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
 }
