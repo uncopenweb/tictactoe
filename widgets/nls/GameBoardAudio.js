@@ -7,6 +7,8 @@
     tie_game_speech : 'Tie game',
     start_game_speech: '{mark} starts the game',
     reset_game_speech : 'Press a key to play again',
-    blank_cell_speech : 'empty at row {row}, column {col}',
-    filled_cell_speech: '{mark} owns row {row}, column {col}'
+    blank_cell_speech : 'row {row}, column {col}',
+    blank_cell_sound : 'sounds/clink',
+    filled_cell_speech: '{mark} owns row {row}, column {col}',
+    filled_cell_sound : 'sounds/timpani'
 }
