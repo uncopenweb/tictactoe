@@ -1,4 +1,5 @@
 {
+    turn_speech : "{mark}'s turn",
     fill_cell_sound : 'sounds/scribble',
     fill_cell_speech : '{mark} takes row {row}, column {col}',
     win_game_sound : 'sounds/win',
