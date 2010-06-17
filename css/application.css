@@ -23,17 +23,20 @@ html, body {
     margin: 10px;
 }
 
-#footer {
-    height: 90px;
-    margin: 0px !important;
-    color: #333;
-}
-
 h1 {
     text-align: center;
     margin-top: 0em;
     font-size: 1.25em;
     color: #333;
+}
+
+.tttGameTurnView {
+    height: 85px;
+    margin: 0px !important;
+    color: #333;
+}
+
+#layout .tttGameTurnView .dijitBorderContainerNoGutterPane {
 }
 
 .tttGameBoardView {

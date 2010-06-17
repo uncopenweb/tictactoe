@@ -46,7 +46,6 @@ dojo.declare('ttt.Main', null, {
         
         // fetch layout widgets in markup
         var layout = dijit.byId('layout');
-        var footer = dijit.byId('footer');
 
         // build all new game components
         var model = new ttt.GameBoardModel({id : 'game'});
@@ -59,8 +58,8 @@ dojo.declare('ttt.Main', null, {
         });
         bview.placeAt(layout, 1);
         this._gameWidgets.push(bview);
-        var tview = new ttt.GameTurnView({model : 'game', region: 'left'});
-        tview.placeAt(footer, 'first');
+        var tview = new ttt.GameTurnView({model : 'game', region: 'bottom'});
+        tview.placeAt(layout, 'last');
         this._gameWidgets.push(tview);
         var aview = new ttt.GameBoardAudio({model : 'game', audio: this._audio});
         aview.placeAt(dojo.body(), 'last');
