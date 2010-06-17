@@ -10,6 +10,13 @@ Design notes
 
 The game follows a loose model-view-controller separation of widgets. The GameBoardModel tracks the current player's turn, the state of the game board cells, and whether the game is over or not. The model publishes events that GameBoardView, GameBoardAudio, and GameTurnView use to show and speak the progress of the game to the user. The GameBoardKeys and GameBoardMouse classes drive the model based on input from the user. These classes also publish events that the view widgets use to give feedback based on user actions. 
 
+License
+=======
+
+Copyright (c) 2010, UNC Open Web Team All rights reserved.
+
+http://creativecommons.org/licenses/BSD/
+
 Attribution
 ===========
 
