@@ -23,6 +23,8 @@ dojo.declare('ttt.Main', null, {
         this._gameWidgets = [];
         // @todo: first player, alternates between games
         this._player = 0;
+        // listen for preference changes from container
+        dojo.subscribe('/org/hark/prefs/response', this, '_onPrefs');
         // listen for game reset
         dojo.subscribe(ttt.CTRL_RESET_GAME, this, 'resetGame');
         // build an audio instance with caching enabled
@@ -33,8 +35,14 @@ dojo.declare('ttt.Main', null, {
     
     _onAudioReady: function(audio) {
         this._audio = audio;
+        // ask for initial prefs
+        dojo.publish('/org/hark/prefs/request');
         // kick off the game
         this.resetGame();
+    },
+    
+    _onPrefs: function(prefs) {
+        console.log(prefs);
     },
     
     resetGame: function() {
