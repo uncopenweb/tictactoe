@@ -126,7 +126,7 @@ dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
         this._timer = setTimeout(dojo.hitch(this, function() {
             this.audio.say({text : text, channel : 'tttSpeech'});
             this.audio.say({text : ntext, channel : 'tttSpeech'});
-        }), 1000);
+        }), 500);
         // short sound
         this.audio.play({url : url, channel : 'tttSound'});
     }
