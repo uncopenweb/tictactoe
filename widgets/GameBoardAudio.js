@@ -24,8 +24,6 @@ dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
         this._fillSay = null;
         // delayed speech timer
         this._timer = null;
-        // lower sound audio
-        this.audio.setProperty({name : 'volume', value: 0.1, channel: 'tttSound'});
     },
     
     postCreate: function() {

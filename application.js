@@ -21,10 +21,14 @@ dojo.declare('ttt.Main', null, {
         this._audio = null;
         // game widgets
         this._gameWidgets = [];
+        // last known preferences
+        this._prefs = {};
         // @todo: first player, alternates between games
         this._player = 0;
+        // listen for pause notices from container
+        dojo.subscribe('/org/hark/pause', this, '_onPause');
         // listen for preference changes from container
-        dojo.subscribe('/org/hark/prefs/response', this, '_onPrefs');
+        dojo.subscribe('/org/hark/prefs/response', this, '_onPrefChange');
         // listen for game reset
         dojo.subscribe(ttt.CTRL_RESET_GAME, this, 'resetGame');
         // build an audio instance with caching enabled
@@ -41,8 +45,65 @@ dojo.declare('ttt.Main', null, {
         this.resetGame();
     },
     
-    _onPrefs: function(prefs) {
-        console.log(prefs);
+    _onPrefChange: function(prefs, name) {
+        this._prefs = prefs;
+        if(name) {
+            var value = prefs[name];
+            var slug = name[0].toUpperCase() + name.slice(1)
+            this['_on'+slug](value);
+        }
+    },
+    
+    _onPause: function() {
+    
+    },
+    
+    _onMouseEnabled: function(value) {
+        
+    },
+    
+    _onSpeechEnabled: function(value) {
+        if(!value) {
+            // just mute it
+            this._audio.setProperty({
+                name : 'volume', 
+                value: 0.0,
+                channel: 'tttSpeech'
+            });
+        } else {
+            // restore volume
+            this._onSpeechVolume(this._prefs.speechVolume);
+        }
+    },
+    
+    _onVolume: function(value) {
+        // master volume multiplier against individual volumes
+        this._audio.setProperty({
+            name : 'volume',
+            value: value*this._prefs.speechVolume,
+            channel: 'tttSpeech'
+        });
+        this._audio.setProperty({
+            name : 'volume',
+            value: value*this._prefs.soundVolume,
+            channel: 'tttSound'
+        });
+    },
+    
+    _onSpeechVolume: function(value) {
+        this._audio.setProperty({
+            name : 'volume',
+            value: value*this._prefs.volume,
+            channel: 'tttSpeech'
+        });        
+    },
+    
+    _onSoundVolume: function(value) {
+        this._audio.setProperty({
+            name : 'volume',
+            value: value*this._prefs.volume,
+            channel: 'tttSound'
+        });        
     },
     
     resetGame: function() {
@@ -73,6 +134,7 @@ dojo.declare('ttt.Main', null, {
         aview.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(aview);
         var mctrl = new ttt.GameBoardMouse({model : 'game', view : 'board'});
+        this._mctrl = mctrl;
         mctrl.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(mctrl);
         var kctrl = new ttt.GameBoardKeys({model : 'game', view : 'board'});
