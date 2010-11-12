@@ -24,6 +24,8 @@ dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
         this._fillSay = null;
         // delayed speech timer
         this._timer = null;
+        // last regard
+        this._lastRegard = null;
     },
     
     postCreate: function() {
@@ -47,6 +49,16 @@ dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
         this.audio.stop({channel : 'tttSpeech'});
         this.audio.stop({channel : 'tttSound'});
         dojo.forEach(this._stoks, dojo.unsubscribe);
+    },
+    
+    pause: function(paused) {
+        if(paused) {
+            this.audio.stop({channel : 'tttSpeech'});
+            this.audio.stop({channel : 'tttSound'});
+            clearTimeout(this._timer);
+        } else {
+            this._onRegardCell(this._lastRegard, this._lastRegard);
+        }
     },
     
     _onFillCell: function(cell, player) {
@@ -92,6 +104,7 @@ dojo.declare('ttt.GameBoardAudio', [dijit._Widget], {
     },
     
     _onRegardCell: function(newCell, oldCell) {
+        this._lastRegard = newCell;
         clearTimeout(this._timer);
         // stop previous output
         this.audio.stop({channel : 'tttSpeech'});

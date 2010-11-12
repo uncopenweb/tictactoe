@@ -54,12 +54,24 @@ dojo.declare('ttt.Main', null, {
         }
     },
     
-    _onPause: function() {
-    
+    _onPause: function(paused) {
+        dojo.forEach(this._gameWidgets, function(widget) {
+            if(widget.pause) {
+                widget.pause(paused);
+            }
+        });
     },
     
     _onMouseEnabled: function(value) {
-        
+        if(this._mctrl) {
+            this._mctrl.destroyRecursive();
+            this._mctrl = null;
+        } else {
+            var mctrl = new ttt.GameBoardMouse({model : 'game', view : 'board'});
+            this._mctrl = mctrl;
+            mctrl.placeAt(dojo.body(), 'last');
+            this._gameWidgets.push(mctrl);
+        }
     },
     
     _onSpeechEnabled: function(value) {
@@ -133,10 +145,12 @@ dojo.declare('ttt.Main', null, {
         var aview = new ttt.GameBoardAudio({model : 'game', audio: this._audio});
         aview.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(aview);
-        var mctrl = new ttt.GameBoardMouse({model : 'game', view : 'board'});
-        this._mctrl = mctrl;
-        mctrl.placeAt(dojo.body(), 'last');
-        this._gameWidgets.push(mctrl);
+        if(this._prefs.mouseEnabled) {
+            var mctrl = new ttt.GameBoardMouse({model : 'game', view : 'board'});
+            this._mctrl = mctrl;
+            mctrl.placeAt(dojo.body(), 'last');
+            this._gameWidgets.push(mctrl);
+        }
         var kctrl = new ttt.GameBoardKeys({model : 'game', view : 'board'});
         kctrl.placeAt(dojo.body(), 'last');
         this._gameWidgets.push(kctrl);
