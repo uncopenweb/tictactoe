@@ -7,6 +7,7 @@ dojo.provide('ttt.Main');
 dojo.require('dijit.layout.BorderContainer');
 dojo.require('dijit.layout.ContentPane');
 dojo.require('dojo.parser');
+dojo.require('dojo.hash');
 dojo.require('ttt.GameBoardAudio');
 dojo.require('ttt.GameBoardView');
 dojo.require('ttt.GameTurnView');
@@ -127,9 +128,15 @@ dojo.declare('ttt.Main', null, {
         
         // fetch layout widgets in markup
         var layout = dijit.byId('layout');
+        
+        var h = dojo.hash();
+        var size;
+        if(h) {
+            size = Number(h.split('x')[0]);
+        }
 
         // build all new game components
-        var model = new ttt.GameBoardModel({id : 'game'});
+        var model = new ttt.GameBoardModel({id : 'game', size : size});
         model.placeAt(dojo.body(), 'first');
         this._gameWidgets.push(model);
         var bview = new ttt.GameBoardView({
