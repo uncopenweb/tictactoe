@@ -1,0 +1,50 @@
+[
+    {
+        "name" : "00504 brass fanfare 4.wav",
+        "license" : "Creative Commons Sampling Plus 1.0 License",
+        "creator" : "Robinhood76",
+        "year" : "2008"
+        "url" : "http://www.freesound.org/samplesViewSingle.php?id=62176",
+        "type" : "sound"
+    },
+    {
+        "name" : "CloseEncounterSax2.wav",
+        "license" : "Creative Commons Sampling Plus 1.0 License",
+        "creator" : "acclivity",
+        "year" : "2006"
+        "url" : "http://www.freesound.org/samplesViewSingle.php?id=26084",
+        "type" : "sound"
+    },
+    {
+        "name" : "fm7timp.wav",
+        "license" : "Creative Commons Sampling Plus 1.0 License",
+        "creator" : "altemark",
+        "year" : "2006"
+        "url" : "http://www.freesound.org/samplesViewSingle.php?id=26431",
+        "type" : "sound"
+    },
+    {
+        "name" : "CHAMPAGNE FLUKE .wav",
+        "license" : "Creative Commons Sampling Plus 1.0 License",
+        "creator" : "Hell's Sound Guy",
+        "year" : "2006"
+        "url" : "http://www.freesound.org/samplesViewSingle.php?id=62176",
+        "type" : "sound"
+    },
+    {
+        "name" : "scribble.mp3",
+        "license" : "Creative Commons Sampling Plus 1.0 License",
+        "creator" : "indigosierra",
+        "year" : "2009"
+        "url" : "http://www.freesound.org/samplesViewSingle.php?id=82610",
+        "type" : "sound"
+    },
+    {
+        "name" : "Tic-Tac-Toe",
+        "license" : "New BSD",
+        "creator" : "UNC Open Web Group",
+        "year" : "2010"
+        "url" : "https://github.com/uncopenweb/",
+        "type" : "code"
+    }
+]
