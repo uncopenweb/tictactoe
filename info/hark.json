@@ -1,0 +1,39 @@
+{
+    "identifier" : "url",
+    "items" : [
+        {
+            "url" : "tictactoe#3x3",
+            "label" : {
+                "en-us" : "Tic-Tac-Toe"
+            },
+            "description" : {
+                "en-us" : "Play a classic game of tic-tac-toe."
+            },
+            "tags" : {
+                "en-us" : "grid, classic"
+            },
+            "media" : {
+                "icon" : "tictactoe/info/icon.png",
+                "screenshots" : ["tictactoe/info/screenshot.png"]
+            },
+            "attribution" : "tictactoe/info/attribution.json"
+        },
+        {
+            "url" : "tictactoe#5x5",
+            "label" : {
+                "en-us" : "Expert Tic-Tac-Toe"
+            },
+            "description" : {
+                "en-us" : "Play an advanced game of tic-tac-toe with a bigger board."
+            },
+            "tags" : {
+                "en-us" : "grid, expert"
+            },
+            "media" : {
+                "icon" : "tictactoe/info/icon.png",
+                "screenshots" : ["tictactoe/info/screenshot.png"]
+            },
+            "attribution" : "tictactoe/info/attribution.json"
+        }
+    ]
+}

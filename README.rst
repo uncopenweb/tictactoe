@@ -13,7 +13,7 @@ The game follows a loose model-view-controller separation of widgets. The GameBo
 License
 =======
 
-Copyright (c) 2010, UNC Open Web Team All rights reserved.
+Copyright (c) 2010, 2011 UNC Open Web Team All rights reserved.
 
 http://creativecommons.org/licenses/BSD/
 
