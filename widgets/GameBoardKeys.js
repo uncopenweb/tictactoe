@@ -24,12 +24,8 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     },
     
     postCreate: function() {
-        var node = dojo.body();
-        // make body focusable
-        dojo.attr(node, 'tabIndex', 0);
-        node.focus();
-        // connect to DOM node for keyboard events
-        this.connect(node, 'onkeyup', '_onKeyUp');
+        // listen to hark frame for key events
+        dojo.subscribe('/org/hark/key/up', this, '_onKeyUp');
         // add data attributes to cells
         dojo.forEach(this.view.getCellNodes(), function(node, i) {
             node.setAttribute('data-cell', i);
