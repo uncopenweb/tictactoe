@@ -130,7 +130,7 @@ dojo.declare('ttt.Main', null, {
         var layout = dijit.byId('layout');
         
         var h = dojo.hash();
-        var size;
+        var size = 3;
         if(h) {
             size = Number(h.split('x')[0]);
         }
