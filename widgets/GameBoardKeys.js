@@ -24,8 +24,9 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     },
     
     postCreate: function() {
-        // listen to hark frame for key events
-        dojo.subscribe('/org/hark/key/up', this, '_onKeyUp');
+        // listen to global key events
+        uow.ui.connectKeys();
+        dojo.subscribe('/uow/key/up', this, '_onKeyUp');
         // add data attributes to cells
         dojo.forEach(this.view.getCellNodes(), function(node, i) {
             node.setAttribute('data-cell', i);
@@ -39,6 +40,7 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     },
     
     uninitialize: function() {
+        uow.ui.disconnectKeys();
         dojo.forEach(this._stoks, dojo.unsubscribe);
     },
     
