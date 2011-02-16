@@ -27,7 +27,7 @@
                 "en-us" : "Play an advanced game of tic-tac-toe with a bigger board."
             },
             "tags" : {
-                "en-us" : "grid, expert"
+                "en-us" : "grid, classic, expert"
             },
             "media" : {
                 "icon" : "tictactoe/info/icon.png",
