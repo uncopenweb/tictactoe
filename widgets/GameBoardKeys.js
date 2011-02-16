@@ -26,17 +26,17 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     postCreate: function() {
         // listen to global key events
         uow.ui.connectKeys();
-        dojo.subscribe('/uow/key/up', this, '_onKeyUp');
+        var a = dojo.subscribe('/uow/key/up', this, '_onKeyUp');
         // add data attributes to cells
         dojo.forEach(this.view.getCellNodes(), function(node, i) {
             node.setAttribute('data-cell', i);
         }, this);
         // connect to model events
-        var a = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
+        var b = dojo.subscribe(ttt.MODEL_END_GAME, this, '_onEndGame');
         // connect to other controller events
-        var b = dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
+        var c = dojo.subscribe(ttt.CTRL_REGARD_CELL, this, '_onRegardCell');
         // store tokens for later unsubscribe
-        this._stoks = [a,b];
+        this._stoks = [a,b,c];
     },
     
     uninitialize: function() {
@@ -47,7 +47,6 @@ dojo.declare('ttt.GameBoardKeys', [dijit._Widget], {
     _onKeyUp: function(event) {
         if(this._ended) {
             // reset the game if ended 
-            this.destroy();
             dojo.publish(ttt.CTRL_RESET_GAME);
             return;
         }
