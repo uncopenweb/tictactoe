@@ -89,6 +89,14 @@ dojo.declare('ttt.Main', null, {
         }
     },
     
+    _onSpeechRate: function(value) {
+        this._audio.setProperty({
+            name : 'rate',
+            value : value,
+            channel : 'tttSpeech'
+        });
+    },
+
     _onVolume: function(value) {
         // master volume multiplier against individual volumes
         this._audio.setProperty({
